@@ -14,12 +14,29 @@ export function PageHead({ title, children, actions }: { title: ReactNode; child
  * A card. `title` gives it a header; `hint` is the one-sentence explanation
  * that sits on the right of that header — the place to say what the card is
  * for, so the screen does not need a paragraph above it.
+ *
+ * `actions` is what you can do to the thing in the card, in its own header:
+ * "Add a customer" above the directory it will appear in. That is where a
+ * reader looks for it, and it keeps the form that follows out of the page —
+ * see `SlideOver`.
  */
-export function Card({ id, title, hint, children, style }:
-  { id?: string; title?: ReactNode; hint?: ReactNode; children: ReactNode; style?: React.CSSProperties }) {
+export function Card({ id, title, hint, actions, children, style }: {
+  id?: string
+  title?: ReactNode
+  hint?: ReactNode
+  actions?: ReactNode
+  children: ReactNode
+  style?: React.CSSProperties
+}) {
   return (
     <div className="card" id={id} style={style}>
-      {title && <div className="card-head"><h2>{title}</h2>{hint && <span className="cell-sub">{hint}</span>}</div>}
+      {title && (
+        <div className="card-head">
+          <h2>{title}</h2>
+          {hint && <span className="cell-sub">{hint}</span>}
+          {actions && <div className="card-actions">{actions}</div>}
+        </div>
+      )}
       {children}
     </div>
   )

@@ -1,10 +1,20 @@
 'use client'
 
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 
 /**
  * A form that slides in from the right and keeps the page behind it visible —
- * for creating something while still reading the list you are adding to.
+ * for adding to a list while still reading the list you are adding to.
+ *
+ * The panel stays in the DOM and is moved off-screen, which is what makes the
+ * animation possible and creates two problems it has to solve itself:
+ *
+ * - `autoFocus` on a field inside fires when the panel first mounts, closed, so
+ *   opening it leaves focus on the button behind. The first field is focused
+ *   here instead, when it actually opens.
+ * - A closed panel's fields are still tabbable. `inert` takes the whole thing
+ *   out of the tab order and away from assistive technology until it is open,
+ *   so a keyboard does not wander into a panel nobody can see.
  */
 export function SlideOver({ open, onClose, title, footer, children }: {
   open: boolean
@@ -13,22 +23,35 @@ export function SlideOver({ open, onClose, title, footer, children }: {
   footer?: ReactNode
   children: ReactNode
 }) {
+  const bodyRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
+    // After the frame that opens it: focusing an element still being
+    // transformed into place scrolls the panel oddly in some browsers.
+    const t = setTimeout(() => {
+      bodyRef.current?.querySelector<HTMLElement>(
+        'input:not([disabled]), select:not([disabled]), textarea:not([disabled])',
+      )?.focus()
+    }, 60)
+    return () => { document.removeEventListener('keydown', onKey); clearTimeout(t) }
   }, [open, onClose])
 
   return (
     <>
       <div className={'scrim' + (open ? ' on' : '')} onClick={onClose} />
-      <aside className={'panel' + (open ? ' on' : '')} aria-hidden={!open} aria-label={typeof title === 'string' ? title : undefined}>
+      <aside
+        className={'panel' + (open ? ' on' : '')}
+        inert={!open}
+        aria-label={typeof title === 'string' ? title : undefined}
+      >
         <div className="panel-head">
           <h3>{title}</h3>
           <button className="icon-btn" aria-label="Close" onClick={onClose}>✕</button>
         </div>
-        <div className="panel-body">{children}</div>
+        <div className="panel-body" ref={bodyRef}>{children}</div>
         {footer && <div className="panel-foot">{footer}</div>}
       </aside>
     </>

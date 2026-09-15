@@ -51,6 +51,11 @@
 }
 .card-head h2{padding:0;border:0}
 .card-head .cell-sub{margin-left:auto;text-align:right}
+/* What you can do to the card's contents, in its header. `margin-left:auto`
+   pushes it right; when a hint is there too, the hint has already claimed the
+   auto margin and this simply follows it. */
+.card-actions{margin-left:auto;display:flex;gap:8px;flex:none}
+.card-head .cell-sub + .card-actions{margin-left:14px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
 .stat{padding:16px 18px}
 .stat .k{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
@@ -209,6 +214,7 @@ tbody tr:hover{background:var(--surface2)}
 }
 .panel.on{transform:none}
 .panel-head{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.panel-head .icon-btn{margin-left:auto}
 .panel-head h3{margin:0;font-size:16px;font-family:var(--sans);font-weight:600}
 .panel-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px}
 .panel-foot{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}

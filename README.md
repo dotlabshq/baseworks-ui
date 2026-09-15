@@ -100,7 +100,19 @@ palette. They never know what the product is.
 | Overlays | `ConfirmDialog` `SlideOver` `Popover` `MenuItem` `CommandPalette` `Gate` |
 | Chrome | `ThemeToggle` |
 
-Two of them carry a rule rather than a look:
+### The shape of a list screen
+
+A screen that shows a list *is* the list. What you can do to it lives in the
+card's header — `<Card actions={<Button small>Add a customer</Button>}>` — and
+the form it opens is a `SlideOver`, not another card above the table. The list
+stays on screen while you type, which matters because you are usually adding to
+something you are looking at, and a form that pushes the list away makes you
+close it to check what is already there.
+
+The module's own menu lists places, not actions. An "Add a customer" entry there
+would be a menu item whose job is to scroll you to a button.
+
+Three of them carry a rule rather than a look:
 
 - **`ConfirmDialog`** puts focus on Cancel, never on the destructive button, so
   a reflex Enter destroys nothing; `typeToConfirm` makes the person write the
@@ -109,6 +121,11 @@ Two of them carry a rule rather than a look:
   full-width row when there are no rows — loading, error, or empty. Screens used
   to hand-roll that row with a `colSpan` they had to keep in step with the
   header.
+- **`SlideOver`** stays in the DOM and moves off-screen, which is what makes it
+  animate and what it then has to compensate for: it focuses its first field
+  when it opens, because an `autoFocus` inside fires at mount while the panel is
+  closed, and it is `inert` while closed, so a keyboard does not tab into a
+  panel nobody can see.
 
 ## How it is consumed
 
