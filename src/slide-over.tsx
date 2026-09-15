@@ -11,7 +11,10 @@ import { useEffect, useRef, type ReactNode } from 'react'
  *
  * - `autoFocus` on a field inside fires when the panel first mounts, closed, so
  *   opening it leaves focus on the button behind. The first field is focused
- *   here instead, when it actually opens.
+ *   here instead, and only when `open` changes — an effect that also depended on
+ *   `onClose` re-ran on every render, because a caller writing `onClose={() =>
+ *   setOpen(false)}` passes a new function each time, and the focus then jumped
+ *   back to the first field on every keystroke in any other one.
  * - A closed panel's fields are still tabbable. `inert` takes the whole thing
  *   out of the tab order and away from assistive technology until it is open,
  *   so a keyboard does not wander into a panel nobody can see.
@@ -24,10 +27,14 @@ export function SlideOver({ open, onClose, title, footer, children }: {
   children: ReactNode
 }) {
   const bodyRef = useRef<HTMLDivElement>(null)
+  // Read through a ref so the effect below depends on `open` alone. See the
+  // note above: depending on the callback itself made it re-run per render.
+  const closeRef = useRef(onClose)
+  closeRef.current = onClose
 
   useEffect(() => {
     if (!open) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeRef.current() }
     document.addEventListener('keydown', onKey)
     // After the frame that opens it: focusing an element still being
     // transformed into place scrolls the panel oddly in some browsers.
@@ -37,7 +44,7 @@ export function SlideOver({ open, onClose, title, footer, children }: {
       )?.focus()
     }, 60)
     return () => { document.removeEventListener('keydown', onKey); clearTimeout(t) }
-  }, [open, onClose])
+  }, [open])
 
   return (
     <>

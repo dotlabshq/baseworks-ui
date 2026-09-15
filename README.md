@@ -125,7 +125,10 @@ Three of them carry a rule rather than a look:
   animate and what it then has to compensate for: it focuses its first field
   when it opens, because an `autoFocus` inside fires at mount while the panel is
   closed, and it is `inert` while closed, so a keyboard does not tab into a
-  panel nobody can see.
+  panel nobody can see. That focus effect depends on `open` alone and reads
+  `onClose` through a ref — depending on the callback made it re-run on every
+  render, since callers write `onClose={() => setOpen(false)}`, and focus then
+  jumped back to the first field on every keystroke in any other one.
 
 ## How it is consumed
 
