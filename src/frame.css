@@ -1,0 +1,188 @@
+/* @baseworks/ui — the application frame.
+
+   Rail, sub panel, top bar, assistant, and the centered gate a person sees
+   before they are inside. A product supplies its own modules and icons; the
+   shape is the same everywhere. */
+
+/* The icon rail: modules, the account, the panel toggle. */
+.app{display:flex;min-height:100vh}
+.rail{display:flex;flex:none;position:sticky;top:0;height:100vh;z-index:40}
+.rail-icons{
+  width:64px;flex:none;display:flex;flex-direction:column;align-items:center;
+  border-right:1px solid var(--line);background:var(--surface);padding:14px 0 12px;gap:4px;
+}
+.brand-mark{
+  width:32px;height:32px;border-radius:9px;background:var(--accent);color:var(--accent-ink);
+  display:grid;place-items:center;font-family:var(--sans);font-weight:700;font-size:15px;
+  margin-bottom:14px;flex:none;
+}
+.rail-icons nav{display:flex;flex-direction:column;gap:4px;align-items:center}
+.rail-sep{width:28px;height:1px;background:var(--line);margin:8px 0}
+.nav-item{
+  position:relative;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;
+  color:var(--muted);
+}
+.nav-item:hover{background:var(--surface2);color:var(--ink)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent)}
+.nav-item.active::before{
+  content:"";position:absolute;left:-12px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--accent);
+}
+.nav-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--warn);border:1.5px solid var(--surface)}
+.rail-toggle{margin-top:auto;color:var(--faint)}
+.rail-toggle:hover{color:var(--ink);background:var(--surface2)}
+.rail-toggle svg{transition:transform .18s}
+body.nav-open .rail-toggle svg{transform:rotate(180deg)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--surface2);border:1px solid var(--line-strong);display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--muted);margin-top:8px;flex:none}
+/* The sub panel: what is inside the active module. */
+.subrail{
+  width:0;overflow:hidden;transition:width .18s ease;
+  background:var(--surface);border-right:1px solid var(--line);
+}
+body.nav-open .subrail{width:192px}
+.subrail-inner{width:192px;height:100%;display:flex;flex-direction:column}
+.subrail-head{padding:20px 16px 10px}
+.subrail-head .mn{font-family:var(--sans);font-weight:600;font-size:15px}
+.subrail-head .md{font-size:11.5px;color:var(--faint);margin-top:1px}
+.subrail-items{display:flex;flex-direction:column;gap:2px;padding:4px 10px}
+.sub-item{
+  display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;
+  color:var(--muted);font-size:13px;text-align:left;width:100%;
+}
+.sub-item:hover{background:var(--surface2);color:var(--ink)}
+.sub-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.sub-item .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint)}
+.sub-item .soon{margin-left:auto;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);border:1px solid var(--line-strong);border-radius:99px;padding:1px 6px}
+.subrail-foot{margin-top:auto;padding:12px 16px;border-top:1px solid var(--line);font-size:12px;line-height:1.3}
+.subrail-foot small{color:var(--faint);display:block}
+/* The main column and its top bar. */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{
+  display:flex;align-items:center;gap:12px;padding:12px 24px;
+  border-bottom:1px solid var(--line);background:var(--surface);
+  position:sticky;top:0;z-index:30;
+}
+.search-hint{
+  flex:1;max-width:420px;display:flex;align-items:center;gap:8px;color:var(--faint);
+  border:1px solid var(--line);border-radius:8px;padding:6px 12px;background:var(--bg);
+}
+.search-hint kbd{
+  margin-left:auto;font-family:var(--mono);font-size:11px;border:1px solid var(--line-strong);
+  border-radius:5px;padding:1px 6px;color:var(--muted);background:var(--surface);
+}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.icon-btn{
+  width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:var(--muted);
+  border:1px solid transparent;
+}
+.icon-btn:hover{background:var(--surface2);color:var(--ink)}
+.chat-toggle{
+  display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:8px;
+  background:var(--accent);color:var(--accent-ink);font-weight:600;
+}
+.chat-toggle:hover{filter:brightness(1.06)}
+.content{padding:24px;max-width:1160px;width:100%;margin:0 auto}
+/* Popover menu, anchored to the button that opened it. */
+.brand-pop{position:relative}
+.brand-menu{
+  position:absolute;right:0;top:42px;background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;box-shadow:var(--shadow);padding:8px;display:flex;flex-direction:column;gap:2px;
+  min-width:180px;z-index:50;
+}
+.brand-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;width:100%;text-align:left;color:var(--muted)}
+.brand-opt:hover{background:var(--surface2);color:var(--ink)}
+.brand-opt.sel{color:var(--ink);font-weight:600}
+.brand-opt .check{margin-left:auto;color:var(--accent)}
+/* Organization switcher, at the top of the rail. */
+.org-rail-btn{
+  position:relative;width:32px;height:32px;border-radius:9px;background:var(--accent);color:var(--accent-ink);
+  display:grid;place-items:center;font-family:var(--sans);font-weight:700;font-size:15px;
+  margin-bottom:14px;flex:none;
+}
+.org-rail-btn .org-rail-caret{
+  position:absolute;right:-4px;bottom:-4px;width:13px;height:13px;border-radius:50%;
+  background:var(--surface);color:var(--muted);border:1px solid var(--line-strong);
+  font-size:7px;display:grid;place-items:center;
+}
+.org-rail-btn:hover .org-rail-caret{color:var(--accent);border-color:var(--accent)}
+.org-menu.rail{left:48px;right:auto;top:0}
+.org-menu-brand{
+  display:flex;align-items:center;gap:8px;padding:6px 10px 8px;margin-bottom:4px;
+  border-bottom:1px solid var(--line);font-family:var(--sans);font-weight:700;color:var(--accent);
+}
+.org-menu-brand span{font-family:var(--sans);font-weight:400;font-size:11.5px;color:var(--faint)}
+.org-mark{
+  width:22px;height:22px;border-radius:6px;background:var(--accent-soft);color:var(--accent);
+  display:grid;place-items:center;font-size:12px;font-weight:700;flex:none;
+}
+.org-mark.sm{width:18px;height:18px;font-size:10.5px;border-radius:5px}
+.org-mark.plus{background:var(--surface2);color:var(--muted);font-weight:500}
+.org-menu{left:0;right:auto;min-width:240px}
+.org-menu-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);padding:4px 10px 6px}
+.org-menu-sep{height:1px;background:var(--line);margin:6px 4px}
+.role-chip{
+  font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);
+  border:1px solid var(--line-strong);border-radius:99px;padding:1px 7px;flex:none;
+}
+.org-create{display:flex;gap:6px;padding:4px}
+.org-create input{
+  flex:1;min-width:0;border:1px solid var(--line-strong);border-radius:7px;padding:6px 10px;
+  background:var(--surface);color:var(--ink);font-size:13px;
+}
+/* The centered gate: sign-in, and the create-your-organization step. */
+.onboard{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg)}
+.onboard-card{
+  width:min(440px,100%);background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  box-shadow:var(--shadow);padding:32px;display:flex;flex-direction:column;gap:16px;
+}
+.onboard-brand{
+  width:36px;height:36px;border-radius:10px;background:var(--accent);color:var(--accent-ink);
+  display:grid;place-items:center;font-family:var(--sans);font-weight:700;font-size:16px;
+}
+.onboard-card h1{font-family:var(--display);font-size:27px;font-weight:400;margin:0;letter-spacing:-.01em}
+.onboard-card p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.6}
+.onboard-card .btn{justify-content:center}
+.onboard-card .invite-stack{margin:14px 0 4px;text-align:left}
+.login-card .btn{width:100%;justify-content:center}
+.login-foot{margin-top:14px;text-align:center}
+/* An invitation is an offer, not a warning: accent border, never red. */
+.invite-stack{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.invite-card{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 15px;border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:10px;background:var(--surface)
+}
+.invite-body{min-width:0;flex:1}
+.invite-title{font-size:13.5px;margin-bottom:2px}
+.invite-actions{display:flex;gap:8px;flex:none}
+/* The assistant, sliding in from the right. */
+.chat{
+  width:0;flex:none;overflow:hidden;transition:width .22s ease;
+  border-left:1px solid var(--line);background:var(--chat-bg);
+  position:sticky;top:0;height:100vh;display:flex;flex-direction:column;
+}
+.chat.open{width:400px}
+.chat-inner{width:400px;display:flex;flex-direction:column;height:100%}
+.chat-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--surface)}
+.chat-head .ttl{font-weight:600}
+.chat-head .sub{font-size:11px;color:var(--faint)}
+.chat-head .close{margin-left:auto}
+.chat-scroll{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:86%;padding:10px 14px;border-radius:14px;font-size:13.5px;line-height:1.45}
+.msg.user{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:4px}
+.typing{align-self:flex-start;display:flex;gap:4px;padding:12px 16px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--faint);animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.2s}
+.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.chat-input{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line);background:var(--surface)}
+.chat-input input{
+  flex:1;border:1px solid var(--line-strong);border-radius:10px;padding:9px 13px;background:var(--bg);color:var(--ink);
+}
+.chat-input input::placeholder{color:var(--faint)}
+.send{width:38px;height:38px;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
+/* Narrow screens: the sub panel and the assistant float over the content. */
+@media(max-width:900px){
+  body.nav-open .subrail{position:fixed;left:64px;top:0;height:100vh;box-shadow:var(--shadow);z-index:45}
+  .chat.open{position:fixed;right:0;z-index:50;width:min(400px,100vw)}
+}

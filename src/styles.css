@@ -1,0 +1,7 @@
+/* @baseworks/ui — the whole stylesheet.
+   Import this once, in the app's root layout:  import '@baseworks/ui/styles.css'
+   The three files can also be imported separately when a product wants the
+   tokens and primitives without the frame. */
+@import './tokens.css';
+@import './primitives.css';
+@import './frame.css';

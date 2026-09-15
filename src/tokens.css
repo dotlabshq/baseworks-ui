@@ -1,0 +1,143 @@
+/* @baseworks/ui — design tokens.
+
+   One palette: **warm paper, ultramarine ink**. Light and dark are the same
+   design at two luminances, not two designs — every token below exists in both
+   and means the same thing in both.
+
+   There is no brand switcher: a second palette is a second design to keep
+   correct in every state. There is a light/dark toggle, because that one is not
+   taste — it is the room the screen is in. The theme follows the operating
+   system until the viewer says otherwise, and `data-theme="light|dark"` on
+   <html> is how they say it (see `ThemeToggle`).
+
+   Why these colours:
+
+   - The neutrals are warm (a paper hue at very low saturation), not grey. A
+     console that is mostly tables and text is read for hours; a warm ground is
+     easier to sit in front of, and it is what distinguishes this from the
+     cool-grey default every admin panel ships with.
+
+   - The accent is ultramarine, at 231°. That is deliberate and functional: the
+     interface is full of status — ok, warn, crit — and those own green, amber
+     and red. An accent anywhere near them turns "this is a link" into "this is
+     a problem". Ultramarine is 76° from ok, 169° from warn and 132° from crit,
+     so an accented thing never reads as a state. The previous palette's
+     vermilion sat beside its own crit red, which is exactly the trap.
+
+   - Every pairing the interface actually makes was measured, not eyeballed:
+     body text ≥ 14:1, secondary text ≥ 5.7:1, an accent used as a link ≥ 7.4:1,
+     a button label on the accent ≥ 7.4:1, and each status pill against its own
+     tinted background ≥ 4.7:1. The faint tier (timestamps, placeholders) is
+     ≥ 3:1 and is never the only place something is said.
+
+   The one serif is the page title. Nothing else is set in it — it marks the
+   top of a document and then gets out of the way. */
+
+:root{
+  /* Ground and surfaces. bg is the page, surface is a card, surface2 is a
+     recessed area inside one (a toolbar, a code block, a table header). */
+  --bg:#FBFAF8; --surface:#FFFFFF; --surface2:#F2F0EB;
+
+  /* Text, in three tiers. ink says it, muted explains it, faint timestamps it. */
+  --ink:#1A1916; --muted:#67635B; --faint:#98938A;
+
+  /* line separates, line-strong encloses (an input, a control you can click). */
+  --line:#E8E4DC; --line-strong:#D6D0C5;
+
+  /* The accent: one colour, for the one thing on a screen that acts.
+     accent-soft is the same colour at 7%, for a pill or a selected row.
+     accent-ink is what is legible on top of it. */
+  --accent:#2B44CE; --accent-soft:#2B44CE12; --accent-ink:#FFFFFF;
+
+  /* State. Never the accent, never each other — see the note above. */
+  --ok:#16794F;   --ok-soft:#16794F16;
+  --warn:#8A6112; --warn-soft:#8A611218;
+  --crit:#B3362F; --crit-soft:#B3362F16;
+
+  --chat-bg:#F5F3EF;
+  --shadow:0 8px 28px rgba(26,25,22,.10);
+
+  --sans:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --display:'Instrument Serif',Georgia,'Times New Roman',serif;
+}
+
+/* Dark is the same palette rotated down: the paper becomes a warm charcoal and
+   the ultramarine comes up to meet it. Not black — a dense table on pure black
+   vibrates, and the borders that hold it together disappear. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1A1815; --surface:#221F1B; --surface2:#2B2823;
+    --ink:#EDE9E1; --muted:#A5A096; --faint:#7B766D;
+    --line:#322E28; --line-strong:#453F37;
+    --accent:#A9B5FF; --accent-soft:#A9B5FF20; --accent-ink:#151538;
+    --ok:#4FC28C;   --ok-soft:#4FC28C22;
+    --warn:#DFB255; --warn-soft:#DFB25520;
+    --crit:#F0736B; --crit-soft:#F0736B1F;
+    --chat-bg:#1D1B18;
+    --shadow:0 8px 28px rgba(0,0,0,.5);
+  }
+}
+
+/* The same values again, so an explicit choice wins in both directions: a
+   forced dark on a light system, and a forced light on a dark one. */
+:root[data-theme="dark"]{
+  --bg:#1A1815; --surface:#221F1B; --surface2:#2B2823;
+  --ink:#EDE9E1; --muted:#A5A096; --faint:#7B766D;
+  --line:#322E28; --line-strong:#453F37;
+  --accent:#A9B5FF; --accent-soft:#A9B5FF20; --accent-ink:#151538;
+  --ok:#4FC28C;   --ok-soft:#4FC28C22;
+  --warn:#DFB255; --warn-soft:#DFB25520;
+  --crit:#F0736B; --crit-soft:#F0736B1F;
+  --chat-bg:#1D1B18;
+  --shadow:0 8px 28px rgba(0,0,0,.5);
+}
+
+/* shadcn/ui names for the same colours, so a component copied in from there
+   inherits this palette instead of bringing its own. These are raw colour
+   values, which is the form shadcn uses with Tailwind v4 (`bg-background`);
+   the older `hsl(var(--background))` form expects bare HSL triplets and will
+   not read these. */
+:root{
+  --background:var(--bg);            --foreground:var(--ink);
+  --card:var(--surface);             --card-foreground:var(--ink);
+  --popover:var(--surface);          --popover-foreground:var(--ink);
+  --primary:var(--accent);           --primary-foreground:var(--accent-ink);
+  --secondary:var(--surface2);       --secondary-foreground:var(--ink);
+  --muted-foreground:var(--muted);
+  --destructive:var(--crit);         --destructive-foreground:var(--accent-ink);
+  --border:var(--line);              --input:var(--line-strong);
+  --ring:var(--accent);              --radius:10px;
+}
+
+/* Reset and text primitives. */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.mono{font-family:var(--mono);font-size:.92em}
+.num{font-variant-numeric:tabular-nums}
+
+/* Controls carry the surface, not the browser's white. A bare <select> in a
+   table cell is a real case — the wrapper classes in primitives.css size and
+   stretch these, but an unwrapped control must already look right, in both
+   themes. */
+input,select,textarea{font:inherit;color:var(--ink)}
+select,textarea,
+input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]){
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:6px 10px;
+}
+select{padding-right:6px}
+input::placeholder,textarea::placeholder{color:var(--faint)}
+input:disabled,select:disabled,textarea:disabled{opacity:.6;cursor:not-allowed}
+
+/* Someone who asked for less motion gets none. */
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+}

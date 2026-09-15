@@ -1,0 +1,233 @@
+/* @baseworks/ui — primitives.
+
+   The pieces a screen is built from: buttons, cards, tables, forms, dialogs.
+   They know nothing about what the product is; every colour comes from
+   tokens.css. Classes, not utilities: one name per component, so a screen reads
+   as markup rather than as a list of measurements. */
+
+/* Page header — the title of a screen and one line saying what it is. */
+.page-head{display:flex;align-items:flex-end;gap:16px;margin:4px 0 20px;flex-wrap:wrap}
+.page-head h1{font-family:var(--display);font-size:27px;font-weight:400;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.page-head p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.page-head .spacer{flex:1}
+/* The light/dark toggle. Which icon shows is decided by the same conditions
+   tokens.css uses to pick the palette, so it is correct in the first paint and
+   needs no script until someone clicks it. */
+.theme-toggle .i-to-dark,.theme-toggle .i-to-light{display:none;line-height:0}
+.theme-toggle .i-to-dark{display:inline-block}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .theme-toggle .i-to-dark{display:none}
+  :root:not([data-theme="light"]) .theme-toggle .i-to-light{display:inline-block}
+}
+:root[data-theme="dark"] .theme-toggle .i-to-dark{display:none}
+:root[data-theme="dark"] .theme-toggle .i-to-light{display:inline-block}
+:root[data-theme="light"] .theme-toggle .i-to-dark{display:inline-block}
+:root[data-theme="light"] .theme-toggle .i-to-light{display:none}
+
+/* Buttons. One shape; ghost is the quiet one, danger the irreversible one. */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;font-weight:600;
+  background:var(--accent);color:var(--accent-ink);
+}
+.btn:hover{filter:brightness(1.06)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);font-weight:500}
+.btn.ghost:hover{background:var(--surface2);filter:none}
+.btn.sm{padding:5px 10px;font-size:12.5px;border-radius:7px}
+.btn.danger{background:var(--crit);color:#fff}
+.btn.danger[disabled]{opacity:.45;cursor:not-allowed}
+.btn[disabled]{opacity:.6;cursor:progress}
+/* Cards, the stat strip, and key/value rows. */
+/* Cards stacked down a page need air between them, and a screen is usually a
+   stack of them. The gap lives on the card rather than on a wrapper so a screen
+   can put one anywhere without remembering to space it; inside `.grid2` the
+   grid's own gap takes over and this is cancelled. */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:16px}
+.card:last-child{margin-bottom:0}
+.grid2>.card{margin-bottom:0}
+.card-pad{padding:18px}
+.card-head{
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  padding:14px 18px;border-bottom:1px solid var(--line);
+}
+.card-head h2{padding:0;border:0}
+.card-head .cell-sub{margin-left:auto;text-align:right}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.stat{padding:16px 18px}
+.stat .k{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.stat .v{font-family:var(--sans);font-size:30px;font-weight:600;line-height:1.15;margin-top:4px}
+.stat .s{font-size:12px;color:var(--faint);margin-top:2px}
+.stat .s b{color:var(--ok);font-weight:600}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+@media(max-width:980px){.grid2{grid-template-columns:1fr}}
+.card h2{font-size:13px;font-weight:600;margin:0;padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.card h2 .mini{margin-left:auto;font-size:12px;color:var(--accent);font-weight:600;cursor:pointer}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.kv:last-child{border-bottom:0}
+.kv>span:first-child{color:var(--muted)}
+/* Attention strip — something the reader has to know before acting. */
+.attn{
+  display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;
+  border:1px solid var(--line);background:var(--surface);font-size:13px;
+}
+.attn .sev{width:8px;height:8px;border-radius:50%;flex:none}
+.attn.warn .sev{background:var(--warn)}
+.attn.warn{border-color:var(--warn);border-left-width:3px}
+.attn.crit .sev{background:var(--crit)}
+.attn.crit{border-color:var(--crit);border-left-width:3px}
+.attn .act{margin-left:auto;color:var(--accent);font-weight:600;flex:none}
+/* Lists: an activity feed and a progress bar. */
+.feed{list-style:none;margin:0;padding:6px 0}
+.feed li{display:flex;gap:12px;padding:9px 18px;font-size:13px;align-items:baseline}
+.feed li+li{border-top:1px solid var(--line)}
+.feed time{font-family:var(--mono);font-size:11px;color:var(--faint);flex:none;width:44px}
+.feed .via{margin-left:auto;flex:none;font-size:11px;color:var(--faint);border:1px solid var(--line);border-radius:99px;padding:1px 8px}
+.feed .via.chat{color:var(--accent);border-color:var(--accent)}
+.prog{height:4px;border-radius:99px;background:var(--surface2);margin-top:8px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);border-radius:99px}
+/* Tables, their toolbar, status pills, and the per-row menu.
+
+   The row menu is position:fixed and takes its coordinates from JS, because
+   the scroll container's overflow would otherwise clip it. */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.toolbar input[type=search]{
+  border:1px solid var(--line-strong);border-radius:8px;padding:7px 12px;background:var(--surface);
+  min-width:220px;color:var(--ink);
+}
+.toolbar input::placeholder{color:var(--faint)}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
+th{
+  text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);
+  font-weight:600;padding:10px 16px;border-bottom:1px solid var(--line);white-space:nowrap;
+}
+td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface2)}
+.cell-name{font-weight:600}
+.cell-name .cell-tag{
+  margin-left:7px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--muted);border:1px solid var(--line-strong);border-radius:99px;padding:1px 6px;
+  vertical-align:1px;white-space:nowrap;
+}
+.cell-sub{font-size:11.5px;color:var(--faint)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:99px;padding:2px 10px}
+.pill .d{width:6px;height:6px;border-radius:50%}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.ok .d{background:var(--ok)}
+.pill.off{background:var(--surface2);color:var(--muted)}
+.pill.off .d{background:var(--faint)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.warn .d{background:var(--warn)}
+.pill.crit{background:var(--crit-soft);color:var(--crit)}
+.pill.crit .d{background:var(--crit)}
+.pill.acc{background:var(--accent-soft);color:var(--accent)}
+.pill.acc .d{background:var(--accent)}
+.row-actions{color:var(--faint);font-weight:700;letter-spacing:.1em}
+.row-menu{
+  position:fixed;z-index:80;min-width:170px;
+  max-height:calc(100vh - 16px);overflow-y:auto;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  box-shadow:var(--shadow);padding:6px;display:flex;flex-direction:column;gap:2px;
+}
+.row-menu button{
+  text-align:left;padding:7px 10px;border-radius:7px;font-size:13px;color:var(--ink);width:100%;
+}
+.row-menu button:hover{background:var(--surface2)}
+.row-menu button.danger{color:var(--crit)}
+.row-menu button.danger:hover{background:var(--crit-soft)}
+/* Tabs. */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tab{
+  position:relative;padding:9px 14px;font-size:13px;font-weight:600;color:var(--muted);
+  border-bottom:2px solid transparent;white-space:nowrap;background:none;
+}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--accent)}
+.tab-badge{
+  display:inline-block;margin-left:7px;min-width:17px;padding:1px 5px;border-radius:9px;
+  background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:700;text-align:center;
+}
+.tab-badge.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+/* Forms: fields, single-line rows, switches, errors.
+
+   The input selector excludes what is not a text box rather than listing what
+   is: a new input type should inherit the field styling by default, and a
+   checkbox stretched to 100% width is the bug this avoids. */
+.form-error{
+  font-size:12.5px;color:var(--crit);background:var(--crit-soft);
+  border-radius:8px;padding:8px 12px;
+}
+.sw{width:34px;height:20px;border-radius:99px;background:var(--line-strong);position:relative;transition:background .15s;flex:none}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw.on{background:var(--ok)}
+.sw.on::after{left:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.field input:not([type=checkbox]):not([type=radio]):not([type=range]),
+.field select,
+.field textarea,
+.form-row input:not([type=checkbox]):not([type=radio]),
+.form-row select{
+  width:100%;border:1px solid var(--line-strong);border-radius:8px;padding:9px 12px;
+  background:var(--surface);color:var(--ink);
+}
+.optline{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:13px}
+.optline small{color:var(--faint);display:block}
+.optline .sw{margin-left:auto}
+.form-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.form-row input{flex:1;min-width:220px}
+.form-row select{flex:none;width:auto;min-width:150px}
+.form-row .btn{flex:none}
+/* Chips — a short, clickable suggestion. */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;border:1px solid var(--line-strong);background:var(--surface);border-radius:99px;padding:5px 12px;color:var(--muted)}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+/* A block of literal text: a token, a command, a config fragment. */
+.codebox{font-family:var(--mono);font-size:12.5px;background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;white-space:pre-wrap;word-break:break-all}
+/* Dialog — a decision that blocks the page until it is answered. */
+.dialog-wrap{
+  position:fixed;inset:0;z-index:90;display:flex;align-items:flex-start;justify-content:center;
+  padding:16vh 16px 24px;overflow-y:auto;background:rgba(10,16,15,.5);
+}
+.dialog{
+  width:min(440px,92vw);background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;box-shadow:var(--shadow);overflow:hidden;
+}
+.dialog-head{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.dialog-head .sev{width:8px;height:8px;border-radius:50%;background:var(--crit);flex:none;box-shadow:0 0 0 3px var(--crit-soft)}
+.dialog-head h3{margin:0;font-size:15.5px;font-family:var(--sans);font-weight:600}
+.dialog-body{padding:18px 20px;max-height:62vh;overflow-y:auto;display:flex;flex-direction:column;gap:12px;font-size:13.5px;line-height:1.5}
+.dialog-body p{margin:0}
+.dialog-losses{margin:0;padding-left:18px;color:var(--muted);font-size:13px;display:flex;flex-direction:column;gap:3px}
+.dialog-foot{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
+/* Slide-over panel: a form that keeps the page behind it visible. */
+.scrim{position:fixed;inset:0;background:rgba(10,16,15,.45);z-index:60;opacity:0;pointer-events:none;transition:opacity .18s}
+.scrim.on{opacity:1;pointer-events:auto}
+.panel{
+  position:fixed;top:0;right:0;height:100vh;width:min(480px,100vw);z-index:70;background:var(--surface);
+  border-left:1px solid var(--line);box-shadow:var(--shadow);transform:translateX(102%);transition:transform .22s ease;
+  display:flex;flex-direction:column;
+}
+.panel.on{transform:none}
+.panel-head{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.panel-head h3{margin:0;font-size:16px;font-family:var(--sans);font-weight:600}
+.panel-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px}
+.panel-foot{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
+/* Command palette. */
+.cmdk{position:fixed;inset:0;z-index:80;display:none;align-items:flex-start;justify-content:center;padding-top:14vh;background:rgba(10,16,15,.45)}
+.cmdk.on{display:flex}
+.cmdk-box{width:min(560px,92vw);background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.cmdk-box input{
+  width:100%;border:none;background:transparent;padding:16px 20px;font-size:15px;color:var(--ink);outline:none;
+  border-bottom:1px solid var(--line);
+}
+.cmdk-list{max-height:320px;overflow-y:auto;padding:8px}
+.cmdk-item{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:10px 12px;border-radius:8px;font-size:13.5px}
+.cmdk-item:hover,.cmdk-item.hl{background:var(--accent-soft)}
+.cmdk-item .k{font-family:var(--mono);font-size:11px;color:var(--faint);margin-left:auto}
+/* Toast — the receipt for something that already happened. */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);z-index:90;
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:13px;font-weight:500;
+  transition:transform .22s ease;box-shadow:var(--shadow);max-width:90vw;
+}
+.toast.on{transform:translateX(-50%) translateY(0)}

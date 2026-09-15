@@ -1,0 +1,11 @@
+{
+  "extends": "@baseworks/tsconfig/react",
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": false,
+    "moduleResolution": "bundler"
+  },
+  "include": [
+    "src"
+  ]
+}
