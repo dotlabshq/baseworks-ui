@@ -12,7 +12,7 @@ import { Button, Card, Table, Pill } from '@baseworks/ui'
 
 | File | What is in it |
 |---|---|
-| `tokens.css` | Colour, type, shadow. Four brands × light/dark. The only place a value is written. |
+| `tokens.css` | Colour, type, shadow. One palette, light and dark. The only place a value is written. |
 | `primitives.css` | Buttons, cards, tables, forms, dialogs, palette, toast. |
 | `frame.css` | Rail, sub panel, top bar, assistant, and the centered gate. |
 
@@ -129,6 +129,44 @@ Three of them carry a rule rather than a look:
   `onClose` through a ref — depending on the callback made it re-run on every
   render, since callers write `onClose={() => setOpen(false)}`, and focus then
   jumped back to the first field on every keystroke in any other one.
+
+## The frame
+
+`Frame` is the whole shell — rail, sub panel, top bar, assistant, ⌘K, toast,
+confirm — and it is **presentational**. It knows how a surface is laid out and
+nothing about what the surface is for:
+
+```tsx
+<Frame
+  modules={modules} pathname={pathname} onNavigate={(href) => router.push(href)}
+  counts={counts} icons={ICONS}
+  railTop={<OrgSwitcher …/>} railBottom={<AccountMenu …/>}
+  topbarLeft={<ModeTag/>} topbarRight={<ThemeToggle/>}
+  assistant={(s) => <AssistantPanel {...s} />}
+>
+  {children}
+</Frame>
+```
+
+Everything that knows what a product *is* — which modules exist, who is signed
+in, which organization is active, what the counts count — arrives as props or
+slots. What the frame owns is the state that belongs to the layout: which panel
+is open, whether the assistant has taken the middle column, what the palette is
+showing, the toast that is up. Screens reach the last two through `useFrame()`.
+
+A surface supplies its own `Module[]`; `activeModule(pathname, modules)` decides
+which is current, longest-prefix wins. `navigationCommands` turns the same list
+into ⌘K entries, so a new module is reachable the moment it is added.
+
+`AssistantPanel` takes `onAsk` — that is where a surface binds a real agent.
+Without it the panel says it is a preview, which keeps the frame demonstrable
+before the tools exist. It **expands into the middle column**: an answer that is
+a table needs the room a table needs, and the expand state lives in `Frame`
+because widening the panel takes space from the content beside it.
+
+Also here, because every surface was otherwise writing them again:
+`useResource` (loading, error, refresh, `enabled`), and the formatters `age`,
+`until`, `untilEpoch`, `money`, `amount`.
 
 ## How it is consumed
 

@@ -1,9 +1,11 @@
 {
   "name": "@baseworks/ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The baseworks design system: tokens, primitives and the application frame. Plain CSS and React, no utility framework.",
   "type": "module",
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./styles.css": "./src/styles.css",
@@ -11,7 +13,9 @@
     "./primitives.css": "./src/primitives.css",
     "./frame.css": "./src/frame.css"
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "typecheck": "tsc --noEmit"
   },

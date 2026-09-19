@@ -161,11 +161,20 @@ body.nav-open .subrail{width:192px}
   position:sticky;top:0;height:100vh;display:flex;flex-direction:column;
 }
 .chat.open{width:400px}
+/* Expanded: the panel takes the middle column too. An answer that is a table —
+   a trial balance, an account's movements — needs the room a table needs, and
+   400px turns one into a column of wrapped numbers. The content stays mounted
+   beside it rather than being replaced, so closing the panel returns to exactly
+   the screen that was there. */
+.chat.open.expanded{width:min(1000px,64vw)}
 .chat-inner{width:400px;display:flex;flex-direction:column;height:100%}
+.chat.expanded .chat-inner{width:100%}
+.chat.expanded .msg{max-width:74%}
+.chat.expanded .chat-scroll{padding:20px 24px}
 .chat-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--surface)}
+.chat-head>div:nth-child(2){flex:1;min-width:0}
 .chat-head .ttl{font-weight:600}
 .chat-head .sub{font-size:11px;color:var(--faint)}
-.chat-head .close{margin-left:auto}
 .chat-scroll{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
 .msg{max-width:86%;padding:10px 14px;border-radius:14px;font-size:13.5px;line-height:1.45}
 .msg.user{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
@@ -184,5 +193,5 @@ body.nav-open .subrail{width:192px}
 /* Narrow screens: the sub panel and the assistant float over the content. */
 @media(max-width:900px){
   body.nav-open .subrail{position:fixed;left:64px;top:0;height:100vh;box-shadow:var(--shadow);z-index:45}
-  .chat.open{position:fixed;right:0;z-index:50;width:min(400px,100vw)}
+  .chat.open,.chat.open.expanded{position:fixed;right:0;z-index:50;width:min(400px,100vw)}
 }
