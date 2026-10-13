@@ -45,7 +45,7 @@ export type { PaletteItem } from './command-palette'
 export { SlideOver } from './slide-over'
 export { Gate } from './gate'
 
-export { Frame, useFrame } from './frame'
+export { Frame, RailTip, useFrame } from './frame'
 export type { FrameProps, FrameCtx } from './frame'
 export { activeModule } from './nav'
 export type { Module, SubItem } from './nav'

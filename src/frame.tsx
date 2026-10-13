@@ -78,6 +78,21 @@ export interface FrameProps {
   children: ReactNode
 }
 
+/**
+ * The hover card beside a rail icon: its name, and a line on what is there.
+ * Shown on hover and on keyboard focus of its parent, so put it inside the
+ * button it describes. A surface uses it for its own rail slots too — the
+ * organization button, the account — so every icon on the rail answers alike.
+ */
+export function RailTip({ title, desc }: { title: ReactNode; desc?: ReactNode }) {
+  return (
+    <span className="rail-tip" role="tooltip">
+      <b>{title}</b>
+      {desc && <span>{desc}</span>}
+    </span>
+  )
+}
+
 export function Frame({
   modules,
   pathname,
@@ -181,13 +196,13 @@ export function Frame({
                 <button
                   key={m.key}
                   className={'nav-item' + (m.key === mod.key ? ' active' : '')}
-                  title={m.title}
                   aria-label={m.title}
                   aria-current={m.key === mod.key ? 'page' : undefined}
                   onClick={() => onModuleClick(m)}
                 >
                   {icons[m.key] ?? fallbackIcon}
                   {badges[m.key] && <span className="nav-dot" />}
+                  <RailTip title={m.title} desc={m.desc} />
                 </button>
               ))}
               {railExtra && <div className="rail-sep" role="separator" />}
@@ -195,12 +210,12 @@ export function Frame({
             </nav>
             <button
               className="nav-item rail-toggle"
-              title="Toggle menu"
               aria-label="Toggle menu"
               aria-expanded={navOpen}
               onClick={() => setNavOpen((v) => !v)}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="m6 3.5 4.5 4.5L6 12.5" /></svg>
+              <RailTip title={navOpen ? 'Hide menu' : 'Show menu'} />
             </button>
             {railBottom}
           </div>
