@@ -75,6 +75,15 @@ export interface FrameProps {
     onToggleExpand: () => void
   }) => ReactNode
   assistantLabel?: string
+  /**
+   * A surface's own side panel, in the column the assistant uses — full
+   * height, right of the content, left of the assistant when both are open.
+   * A screen that opens a panel about something (a node on a map, a row in a
+   * list) puts it here rather than inside the content column, so it reads as
+   * the same kind of thing as the assistant: beside the screen, not in it.
+   * The surface owns its width and whether it is open.
+   */
+  aside?: ReactNode
   children: ReactNode
 }
 
@@ -110,6 +119,7 @@ export function Frame({
   commands = [],
   assistant,
   assistantLabel = 'Assistant',
+  aside,
   children,
 }: FrameProps) {
   const mod = activeModule(pathname, modules)
@@ -264,6 +274,8 @@ export function Frame({
           </header>
           <div className="content">{children}</div>
         </div>
+
+        {aside && <div className="frame-aside">{aside}</div>}
 
         {assistant?.({
           open: chatOpen,

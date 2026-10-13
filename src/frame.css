@@ -168,6 +168,9 @@ body.nav-open .subrail{width:192px}
 .invite-body{min-width:0;flex:1}
 .invite-title{font-size:13.5px;margin-bottom:2px}
 .invite-actions{display:flex;gap:8px;flex:none}
+/* A surface's own side panel: the assistant's column, before the assistant.
+   The surface sizes what it puts inside; this only pins it full height. */
+.frame-aside{flex:none;position:sticky;top:0;height:100vh;display:flex}
 /* The assistant, sliding in from the right. */
 .chat{
   width:0;flex:none;overflow:hidden;transition:width .22s ease;
