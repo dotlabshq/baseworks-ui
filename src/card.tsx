@@ -20,16 +20,24 @@ export function PageHead({ title, children, actions }: { title: ReactNode; child
  * reader looks for it, and it keeps the form that follows out of the page —
  * see `SlideOver`.
  */
-export function Card({ id, title, hint, actions, children, style }: {
+export function Card({ id, title, hint, actions, children, style, className }: {
   id?: string
   title?: ReactNode
   hint?: ReactNode
   actions?: ReactNode
   children: ReactNode
   style?: React.CSSProperties
+  /**
+   * Added to `card`, for the few things a card can be that are not about its
+   * contents — `no-print`, most of all. Wrapping a card in a div to carry such
+   * a class looks harmless and is not: `.card:last-child` drops the bottom
+   * margin, so the wrapped card loses the gap under it and the next one appears
+   * welded to it.
+   */
+  className?: string
 }) {
   return (
-    <div className="card" id={id} style={style}>
+    <div className={className ? `card ${className}` : 'card'} id={id} style={style}>
       {title && (
         <div className="card-head">
           <h2>{title}</h2>
