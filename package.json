@@ -1,6 +1,6 @@
 {
   "name": "@baseworks/ui",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "The baseworks design system: tokens, primitives and the application frame. Plain CSS and React, no utility framework.",
   "type": "module",
   "publishConfig": {

@@ -56,6 +56,6 @@ export { useResource } from './use-resource'
 export type { Resource, ResourceOptions } from './use-resource'
 export { age, until, untilEpoch, money, amount } from './format'
 
-export { applyTheme, currentTheme, resolvedTheme, themeInitScript } from './theme'
+export { applyTheme, currentTheme, resolvedTheme, storedTheme, themeInitScript, THEME_COOKIE } from './theme'
 export type { ThemeMode } from './theme'
 export { ThemeToggle } from './theme-toggle'
